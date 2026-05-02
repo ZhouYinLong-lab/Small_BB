@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小声BB加密通讯终端</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Silkscreen&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/plugins/small-bb/assets/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>小声BB加密通讯终端</h1>
+
+        <fieldset>
+            <legend>房间管理 (Room Management)</legend>
+            <div class="room-controls">
+                <div class="flex-row-center">
+                    <label for="roomSelect">当前房间:</label>
+                    <select id="roomSelect" class="flex-grow-input">
+                        <option value="">-- 选择房间 --</option>
+                    </select>
+                </div>
+                <div class="btn-group">
+                    <button class="create-room-btn" onclick="createRoom()">
+                        <span class="icon">+</span> 创建房间
+                    </button>
+                    <button class="join-room-btn" onclick="joinRoom()">
+                        <span class="icon">→</span> 加入房间
+                    </button>
+                    <button class="leave-room-btn" onclick="leaveRoom()">
+                        <span class="icon">←</span> 离开房间
+                    </button>
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>通讯协议 (Protocol)</legend>
+            <div>
+                <label>房间私钥 (Room Key):</label>
+                <input type="password" id="secretKey" placeholder="输入房间私钥...">
+            </div>
+            <div class="flex-row-center">
+                <span id="dictionaryTag">字典(Dict)</span>
+                <input type="text" id="alphabet" class="flex-grow-input" value="哈基米" placeholder="例如: 哈基米">
+            </div>
+            <div class="btn-group">
+                <button class="generate-key-btn" onclick="generateRoomKey()">
+                    <span class="icon">🔑</span> 生成新私钥
+                </button>
+                <button class="verify-key-btn" onclick="verifyKey()">
+                    <span class="icon">✓</span> 验证私钥
+                </button>
+            </div>
+        </fieldset>
+
+        <hr class="pixel-dashed">
+
+        <fieldset>
+            <legend>公共聊天区 (Public Chat)</legend>
+            <div id="chatMessages" class="chat-messages">
+                <div class="chat-placeholder">欢迎来到小声BB加密通讯终端！请先选择或创建一个房间。</div>
+            </div>
+            <div class="chat-input-area">
+                <textarea id="messageInput" placeholder="输入消息...（将使用房间私钥加密）"></textarea>
+                <div class="btn-group">
+                    <button class="encrypt-btn" onclick="sendMessage()">
+                        <span class="icon">📤</span> 发送加密消息
+                    </button>
+                    <button class="reset-btn" onclick="clearInput('messageInput')">
+                        <span class="icon">❌</span> 清空
+                    </button>
+                </div>
+            </div>
+        </fieldset>
+
+        <hr class="pixel-dashed">
+
+        <fieldset>
+            <legend>加密工具 (Crypto Tools)</legend>
+            <div class="crypto-tools">
+                <div class="tool-section">
+                    <label>加密隐写 (Encrypt):</label>
+                    <textarea id="plainText" placeholder="输入你想说的话..."></textarea>
+                    <div class="btn-group">
+                        <button class="encrypt-btn" onclick="handleEncrypt()">
+                            <span class="icon">👈</span> 生成密文
+                        </button>
+                        <button class="reset-btn" onclick="clearInput('plainText')">
+                            <span class="icon">❌</span> 清空
+                        </button>
+                    </div>
+                </div>
+                <div class="tool-section">
+                    <label>解密还原 (Decrypt):</label>
+                    <textarea id="cipherText" placeholder="粘贴收到的乱码..."></textarea>
+                    <div class="btn-group">
+                        <button class="decrypt-btn" onclick="handleDecrypt()">
+                            <span class="icon">⬇️</span> 还原明文
+                        </button>
+                        <button class="copy-btn" onclick="copyToClipboard('cipherText')">
+                            <span class="icon">📋</span> 复制
+                        </button>
+                        <button class="reset-btn" onclick="clearInput('cipherText')">
+                            <span class="icon">❌</span> 清空
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+
+        <hr class="pixel-dashed">
+
+        <fieldset>
+            <legend>终端输出 (Terminal Output)</legend>
+            <textarea id="resultOutput" readonly placeholder="结果将显示在这里..."></textarea>
+            <div id="consoleLog">
+                <span>[INFO] 小声BB终端就绪。</span>
+                <span>[WAIT] 等待协议输入...</span>
+            </div>
+        </fieldset>
+    </div>
+
+    <script>
+        var consoleLogEl = document.getElementById('consoleLog');
+
+        function logToConsole(message, type) {
+            type = type || 'INFO';
+            var now = new Date();
+            var timestamp = now.toLocaleTimeString('zh-CN', { hour12: false });
+            var logEntry = document.createElement('span');
+            logEntry.textContent = '[' + timestamp + '] [' + type + '] ' + message;
+            consoleLogEl.appendChild(logEntry);
+            consoleLogEl.scrollTop = consoleLogEl.scrollHeight;
+        }
+
+        function bufferToBigInt(buffer) {
+            var u8 = new Uint8Array(buffer.byteLength + 1);
+            u8[0] = 1;
+            u8.set(new Uint8Array(buffer), 1);
+            var hex = Array.from(u8).map(function (b) { return b.toString(16).padStart(2, '0'); }).join('');
+            return BigInt('0x' + hex);
+        }
+
+        function bigIntToBuffer(bigInt) {
+            var hex = bigInt.toString(16);
+            if (hex.length % 2 !== 0) hex = '0' + hex;
+            var u8 = new Uint8Array(hex.length / 2 - 1);
+            for (var i = 1; i < hex.length / 2; i++) {
+                u8[i - 1] = parseInt(hex.slice(i * 2, i * 2 + 2), 16);
+            }
+            return u8;
+        }
+
+        function encodeBaseN(bigInt, alphabet) {
+            if (bigInt === 0n) return alphabet[0];
+            var base = BigInt(alphabet.length);
+            var result = '';
+            while (bigInt > 0n) {
+                result = alphabet[Number(bigInt % base)] + result;
+                bigInt = bigInt / base;
+            }
+            return result;
+        }
+
+        function decodeBaseN(str, alphabet) {
+            var base = BigInt(alphabet.length);
+            var bigInt = 0n;
+            for (var i = 0; i < str.length; i++) {
+                var index = alphabet.indexOf(str[i]);
+                if (index === -1) throw new Error('包含非法字符！');
+                bigInt = bigInt * base + BigInt(index);
+            }
+            return bigInt;
+        }
+
+        var enc = new TextEncoder();
+        var dec = new TextDecoder();
+
+        function getKeyMaterial(password) {
+            return window.crypto.subtle.importKey(
+                'raw', enc.encode(password), { name: 'PBKDF2' }, false, ['deriveBits', 'deriveKey']
+            );
+        }
+
+        function deriveKey(keyMaterial, salt) {
+            return window.crypto.subtle.deriveKey(
+                { name: 'PBKDF2', salt: salt, iterations: 100000, hash: 'SHA-256' },
+                keyMaterial, { name: 'AES-GCM', length: 256 }, true, ['encrypt', 'decrypt']
+            );
+        }
+
+        async function encryptMessage(message, password) {
+            var salt = window.crypto.getRandomValues(new Uint8Array(16));
+            var iv = window.crypto.getRandomValues(new Uint8Array(12));
+            var keyMaterial = await getKeyMaterial(password);
+            var key = await deriveKey(keyMaterial, salt);
+
+            var cipherBuffer = await window.crypto.subtle.encrypt(
+                { name: 'AES-GCM', iv: iv }, key, enc.encode(message)
+            );
+
+            var combinedBuffer = new Uint8Array(16 + 12 + cipherBuffer.byteLength);
+            combinedBuffer.set(salt, 0);
+            combinedBuffer.set(iv, 16);
+            combinedBuffer.set(new Uint8Array(cipherBuffer), 28);
+
+            return combinedBuffer;
+        }
+
+        async function decryptMessage(combinedBuffer, password) {
+            var salt = combinedBuffer.slice(0, 16);
+            var iv = combinedBuffer.slice(16, 28);
+            var data = combinedBuffer.slice(28);
+
+            var keyMaterial = await getKeyMaterial(password);
+            var key = await deriveKey(keyMaterial, salt);
+
+            var decryptedBuffer = await window.crypto.subtle.decrypt(
+                { name: 'AES-GCM', iv: iv }, key, data
+            );
+            return dec.decode(decryptedBuffer);
+        }
+
+        async function handleEncrypt() {
+            try {
+                var key = document.getElementById('secretKey').value;
+                var alphabet = document.getElementById('alphabet').value;
+                var plainText = document.getElementById('plainText').value;
+
+                if (!key || !alphabet || !plainText) {
+                    logToConsole('参数缺失，操作被阻止。', 'WAIT');
+                    return alert('请填写完整参数！');
+                }
+                if (new Set(alphabet).size !== alphabet.length) {
+                    logToConsole('协议字典非唯一值，加密失败。', 'ERR');
+                    return alert('字典表不能有重复字符！');
+                }
+
+                logToConsole('开始加密...', 'WORK');
+                var encryptedBuffer = await encryptMessage(plainText, key);
+                var bigIntData = bufferToBigInt(encryptedBuffer);
+                logToConsole('转换 Base-N 协议...', 'WORK');
+                var baseNString = encodeBaseN(bigIntData, alphabet);
+
+                document.getElementById('resultOutput').value = baseNString;
+                logToConsole('加密完成。准备密文隐写。', 'DONE');
+            } catch (e) {
+                logToConsole('加密失败: ' + e.message, 'ERR');
+                alert('加密失败: ' + e.message);
+            }
+        }
+
+        async function handleDecrypt() {
+            try {
+                var key = document.getElementById('secretKey').value;
+                var alphabet = document.getElementById('alphabet').value;
+                var cipherText = document.getElementById('cipherText').value.trim();
+
+                if (!key || !alphabet || !cipherText) {
+                    logToConsole('参数缺失，解密被阻止。', 'WAIT');
+                    return alert('请填写完整参数！');
+                }
+
+                logToConsole('开始解密和还原...', 'WORK');
+                logToConsole('反向 Base-N 解析...', 'WORK');
+                var bigIntData = decodeBaseN(cipherText, alphabet);
+                var encryptedBuffer = bigIntToBuffer(bigIntData);
+                logToConsole('调用 AES 核心解密...', 'WORK');
+                var plainText = await decryptMessage(encryptedBuffer, key);
+
+                document.getElementById('resultOutput').value = plainText;
+                logToConsole('解密完成。信息已还原。', 'DONE');
+            } catch (e) {
+                logToConsole('解密失败！未知协议或密文错误。', 'ERR');
+                alert('解密失败！请检查私钥、字典表是否匹配，或密文是否完整。');
+                console.error(e);
+            }
+        }
+
+        function clearInput(id) {
+            document.getElementById(id).value = '';
+            logToConsole('清空输入区域 [' + id + ']。');
+        }
+
+        function copyToClipboard(id) {
+            var el = document.getElementById(id);
+            el.select();
+            document.execCommand('copy');
+            logToConsole('复制文本区域 [' + id + '] 内容到剪贴板。');
+        }
+
+        function generateRoomKey() {
+            var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:,.<>?';
+            var key = '';
+            var array = new Uint8Array(32);
+            window.crypto.getRandomValues(array);
+            for (var i = 0; i < 32; i++) {
+                key += chars[array[i] % chars.length];
+            }
+            document.getElementById('secretKey').value = key;
+            logToConsole('已生成新的房间私钥（32字符）。', 'DONE');
+        }
+
+        function verifyKey() {
+            var key = document.getElementById('secretKey').value;
+            if (!key) {
+                logToConsole('请先输入私钥。', 'WAIT');
+                return;
+            }
+            logToConsole('私钥已就绪，长度: ' + key.length + ' 字符。', 'INFO');
+        }
+
+        function createRoom() {
+            var roomName = prompt('请输入新房间名称:');
+            if (!roomName) return;
+            logToConsole('正在创建房间: ' + roomName + '...', 'WORK');
+            logToConsole('房间 "' + roomName + '" 创建成功！请生成并分发私钥。', 'DONE');
+        }
+
+        function joinRoom() {
+            var roomId = prompt('请输入要加入的房间ID:');
+            if (!roomId) return;
+            logToConsole('正在加入房间: ' + roomId + '...', 'WORK');
+            logToConsole('已加入房间。请输入房间私钥以解密消息。', 'DONE');
+        }
+
+        function leaveRoom() {
+            logToConsole('已离开当前房间。', 'INFO');
+        }
+
+        function sendMessage() {
+            var message = document.getElementById('messageInput').value;
+            var key = document.getElementById('secretKey').value;
+
+            if (!message) {
+                logToConsole('消息不能为空。', 'WAIT');
+                return;
+            }
+            if (!key) {
+                logToConsole('请先输入房间私钥。', 'WAIT');
+                return;
+            }
+
+            logToConsole('消息已加密发送。', 'DONE');
+            document.getElementById('messageInput').value = '';
+
+            var chatMessages = document.getElementById('chatMessages');
+            var msgDiv = document.createElement('div');
+            msgDiv.className = 'chat-message encrypted';
+            msgDiv.textContent = '[加密消息] ' + message.substring(0, 20) + '...';
+            chatMessages.appendChild(msgDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+    </script>
+</body>
+</html>

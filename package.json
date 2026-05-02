@@ -1,0 +1,42 @@
+{
+    "name": "small-bb",
+    "version": "2.0.0",
+    "description": "小声BB - 基于私钥的加密即时通讯系统",
+    "main": "library.js",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/your-org/small-bb.git"
+    },
+    "keywords": [
+        "nodebb",
+        "plugin",
+        "encryption",
+        "chat",
+        "crypto",
+        "secure-messaging"
+    ],
+    "author": "Small_BB Team",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/your-org/small-bb/issues"
+    },
+    "homepage": "https://github.com/your-org/small-bb#readme",
+    "nbbpm": {
+        "compatibility": "^2.0.0 || ^3.0.0"
+    },
+    "peerDependencies": {
+        "nodebb": "^2.0.0 || ^3.0.0"
+    },
+    "engines": {
+        "node": ">=16.0.0"
+    },
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "lint": "eslint ."
+    },
+    "devDependencies": {
+        "eslint": "^8.0.0",
+        "eslint-config-nodebb": "^0.2.0",
+        "eslint-plugin-import": "^2.0.0"
+    }
+}
