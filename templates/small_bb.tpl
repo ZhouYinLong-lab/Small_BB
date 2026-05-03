@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>小声BB加密通讯终端</title>
+    <title>Small_BB加密通讯终端</title>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Silkscreen&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/plugins/small-bb/assets/style.css">
+    <link rel="stylesheet" href="/plugins/small_bb/assets/style.css">
 </head>
 <body>
     <div class="container">
-        <h1>小声BB加密通讯终端</h1>
+        <h1>Small_BB加密通讯终端</h1>
 
         <fieldset>
             <legend>房间管理 (Room Management)</legend>
@@ -59,7 +59,7 @@
         <fieldset>
             <legend>公共聊天区 (Public Chat)</legend>
             <div id="chatMessages" class="chat-messages">
-                <div class="chat-placeholder">欢迎来到小声BB加密通讯终端！请先选择或创建一个房间。</div>
+                <div class="chat-placeholder">欢迎来到Small_BB加密通讯终端！请先选择或创建一个房间。</div>
             </div>
             <div class="chat-input-area">
                 <textarea id="messageInput" placeholder="输入消息...（将使用房间私钥加密）"></textarea>
@@ -115,7 +115,7 @@
             <legend>终端输出 (Terminal Output)</legend>
             <textarea id="resultOutput" readonly placeholder="结果将显示在这里..."></textarea>
             <div id="consoleLog">
-                <span>[INFO] 小声BB终端就绪。</span>
+                <span>[INFO] Small_BB终端就绪。</span>
                 <span>[WAIT] 等待协议输入...</span>
             </div>
         </fieldset>
