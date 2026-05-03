@@ -1,6 +1,6 @@
 {
-    "id": "small-bb",
-    "name": "小声BB加密通讯终端",
+    "id": "small_bb",
+    "name": "Small_BB加密通讯终端",
     "description": "基于私钥的加密即时通讯系统，支持房间管理和消息加密",
     "version": "2.0.0",
     "library": "./library.js",
@@ -13,7 +13,7 @@
         { "hook": "filter:admin.header.build", "method": "addAdminNavigation" }
     ],
     "modules": {
-        "../client/small-bb.js": "./public/assets/small-bb.js"
+        "../client/small_bb.js": "./public/assets/small_bb.js"
     },
     "compatibility": "^2.0.0 || ^3.0.0"
 }

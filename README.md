@@ -1,11 +1,11 @@
-# 小声BB (Small_BB)
+# Small_BB
 
 <p align="center">
   <strong>🔒 基于私钥的加密即时通讯系统</strong>
 </p>
 
 <p align="center">
-  <em>"小声BB" — 只有持有正确私钥的人，才能听懂你在说什么。</em>
+  <em>"Small_BB" — 只有持有正确私钥的人，才能听懂你在说什么。</em>
 </p>
 
 <p align="center">
@@ -41,7 +41,7 @@
 
 ## 项目简介
 
-小声BB（Small_BB）是一个基于 **NodeBB** 论坛平台的加密即时通讯插件。它实现了基于房间（Room）的私钥加密机制，确保消息内容仅对持有正确私钥的用户可见。当用户未持有对应私钥或私钥验证失败时，所有消息内容将自动转换为由"哈基米"文本构成的乱码形式。
+Small_BB 是一个基于 **NodeBB** 论坛平台的加密即时通讯插件。它实现了基于房间（Room）的私钥加密机制，确保消息内容仅对持有正确私钥的用户可见。当用户未持有对应私钥或私钥验证失败时，所有消息内容将自动转换为由"哈基米"文本构成的乱码形式。
 
 ### 核心设计理念
 
@@ -101,7 +101,7 @@
 ┌──────────────────────────────────────────────────────────┐
 │                  NodeBB 应用服务器                         │
 │  ┌──────────┐  ┌──────────┐  ┌──────────────────────┐   │
-│  │ 用户认证  │  │ 路由处理  │  │ 小声BB 插件          │   │
+│  │ 用户认证  │  │ 路由处理  │  │ Small_BB 插件        │   │
 │  │(Passport)│  │(Express) │  │ (加密/解密/房间管理)  │   │
 │  └──────────┘  └──────────┘  └──────────────────────┘   │
 └──────────────────────────────────────────────────────────┘
@@ -134,8 +134,8 @@
 如果你只想快速体验加密功能，无需安装 NodeBB，直接使用独立测试页面：
 
 ```bash
-git clone https://github.com/your-org/small-bb.git
-cd small-bb
+git clone https://github.com/your-org/small_bb.git
+cd small_bb
 npx http-server -p 8080 -c-1
 ```
 
@@ -321,7 +321,7 @@ git --version
 ### 部署流程图
 
 ```
-环境准备 → 安装 NodeBB → 安装小声BB插件 → 配置数据库 → 启动服务 → 激活插件 → 验证部署
+环境准备 → 安装 NodeBB → 安装 Small_BB 插件 → 配置数据库 → 启动服务 → 激活插件 → 验证部署
 ```
 
 ### 步骤一：安装 NodeBB
@@ -348,55 +348,55 @@ npm install
 
 > **详细 NodeBB 安装文档**：https://docs.nodebb.org/installing/os/
 
-### 步骤二：安装小声BB插件
+### 步骤二：安装 Small_BB 插件
 
 #### 方式一：从本地目录安装（开发模式，推荐）
 
 ```bash
-# 1. 克隆小声BB项目
-git clone https://github.com/your-org/small-bb.git
-# 项目将位于当前目录的 small-bb 文件夹中
+# 1. 克隆 Small_BB 项目
+git clone https://github.com/your-org/small_bb.git
+# 项目将位于当前目录的 small_bb 文件夹中
 
 # 2. 进入 NodeBB 根目录
 cd nodebb
 
-# 3. 将小声BB插件复制到 node_modules
+# 3. 将 Small_BB 插件复制到 node_modules
 # Windows (PowerShell):
-Copy-Item -Path "..\small-bb\*" -Destination ".\node_modules\small-bb\" -Recurse -Force
+Copy-Item -Path "..\small_bb\*" -Destination ".\node_modules\small_bb\" -Recurse -Force
 
 # Windows (CMD):
-xcopy /E /I "..\small-bb" ".\node_modules\small-bb"
+xcopy /E /I "..\small_bb" ".\node_modules\small_bb"
 
 # macOS / Linux:
-cp -r ../small-bb ./node_modules/small-bb
+cp -r ../small_bb ./node_modules/small_bb
 
 # 4. 确保插件目录结构正确
 # 检查以下文件是否存在:
-ls ./node_modules/small-bb/plugin.json
-ls ./node_modules/small-bb/library.js
-ls ./node_modules/small-bb/package.json
+ls ./node_modules/small_bb/plugin.json
+ls ./node_modules/small_bb/library.js
+ls ./node_modules/small_bb/package.json
 ```
 
 #### 方式二：使用 npm link（开发模式）
 
 ```bash
-# 1. 在 small-bb 项目目录中创建全局链接
-cd small-bb
+# 1. 在 small_bb 项目目录中创建全局链接
+cd small_bb
 npm link
 
 # 2. 在 NodeBB 目录中链接插件
 cd ../nodebb
-npm link small-bb
+npm link small_bb
 
 # 3. 验证链接
-ls ./node_modules/small-bb
+ls ./node_modules/small_bb
 ```
 
 #### 方式三：从 npm 安装（生产模式）
 
 ```bash
 cd nodebb
-npm install small-bb
+npm install small_bb
 ```
 
 ### 步骤三：激活插件
@@ -411,7 +411,7 @@ npm install small-bb
 # 2. 通过管理后台激活插件:
 #    浏览器访问: http://your-domain.com/admin
 #    导航到: 插件 (Plugins) → 已安装 (Installed)
-#    找到 "小声BB加密通讯终端" → 点击 "激活 (Activate)"
+#    找到 "Small_BB加密通讯终端" → 点击 "激活 (Activate)"
 #    系统会自动重建并重启
 ```
 
@@ -422,13 +422,11 @@ npm install small-bb
 curl http://localhost:4567
 # 预期: 返回 NodeBB 首页 HTML
 
-# 2. 访问小声BB页面
-# 浏览器打开: http://localhost:4567/small-bb
-# 预期: 看到像素风格的加密通讯终端界面
+# 2. 访问 Small_BB 页面
+# 浏览器打开: http://localhost:4567/small_bb
 
-# 3. 测试 API 端点
-curl http://localhost:4567/small-bb/api/room-key/generate
-# 预期: 返回 JSON 格式的随机房间密钥
+# 3. 测试加密 API
+curl http://localhost:4567/small_bb/api/room-key/generate
 ```
 
 ---
@@ -447,8 +445,8 @@ curl http://localhost:4567/small-bb/api/room-key/generate
 
 ```json
 {
-    "id": "small-bb",
-    "name": "小声BB加密通讯终端",
+    "id": "small_bb",
+    "name": "Small_BB加密通讯终端",
     "description": "基于私钥的加密即时通讯系统，支持房间管理和消息加密",
     "version": "2.0.0",
     "library": "./library.js",
@@ -479,7 +477,7 @@ curl http://localhost:4567/small-bb/api/room-key/generate
 
 ```json
 {
-    "name": "small-bb",
+    "name": "small_bb",
     "version": "2.0.0",
     "main": "library.js",
     "peerDependencies": {
@@ -541,7 +539,7 @@ cd nodebb
 npm install
 
 # 3. 代码质量检查（如果配置了 ESLint）
-# cd node_modules/small-bb && npm run lint
+# cd node_modules/small_bb && npm run lint
 
 # 4. 构建前端资源
 ./nodebb build
@@ -568,7 +566,7 @@ npm ls --depth=0
 
 ```bash
 # 进入插件目录
-cd node_modules/small-bb
+cd node_modules/small_bb
 
 # 运行 ESLint 检查
 npx eslint .
@@ -718,11 +716,11 @@ curl -I http://localhost:4567
 
 ## API 文档
 
-小声BB插件提供以下 REST API 端点：
+Small_BB 插件提供以下 REST API 端点：
 
 ### 加密接口
 
-#### POST `/small-bb/api/encrypt`
+#### POST `/small_bb/api/encrypt`
 
 加密明文消息。
 
@@ -766,7 +764,7 @@ curl -I http://localhost:4567
 
 ---
 
-#### POST `/small-bb/api/decrypt`
+#### POST `/small_bb/api/decrypt`
 
 解密密文消息。
 
@@ -811,7 +809,7 @@ curl -I http://localhost:4567
 
 ### 房间密钥接口
 
-#### GET `/small-bb/api/room-key/generate`
+#### GET `/small_bb/api/room-key/generate`
 
 生成随机房间密钥。
 
@@ -829,7 +827,7 @@ curl -I http://localhost:4567
 
 ---
 
-#### POST `/small-bb/api/room-key/hash`
+#### POST `/small_bb/api/room-key/hash`
 
 对房间密钥进行哈希处理（用于安全存储）。
 
@@ -855,7 +853,7 @@ curl -I http://localhost:4567
 
 ---
 
-#### POST `/small-bb/api/room-key/verify`
+#### POST `/small_bb/api/room-key/verify`
 
 验证房间密钥是否正确。
 
@@ -882,7 +880,7 @@ curl -I http://localhost:4567
 
 ---
 
-#### POST `/small-bb/api/hajimi`
+#### POST `/small_bb/api/hajimi`
 
 生成"哈基米"乱码文本。
 
@@ -910,7 +908,7 @@ curl -I http://localhost:4567
 ## 项目结构
 
 ```
-small-bb/
+small_bb/
 ├── controllers/                # 控制器模块
 │   ├── index.js               # 控制器入口，统一导出
 │   ├── cryptoController.js    # 加密/解密 API 控制器
@@ -921,7 +919,7 @@ small-bb/
 │   │   └── style.css          # 像素风格样式表
 │   └── test-standalone.html   # 独立测试页面（无需 NodeBB）
 ├── templates/                 # 模板文件
-│   └── small-bb.tpl           # 主页面模板（含内联加密脚本）
+│   └── small_bb.tpl           # 主页面模板（含内联加密脚本）
 ├── index.html                 # 参考实现（UI 风格和加密逻辑参考）
 ├── ARCHITECTURE.md            # 系统架构与数据库设计文档
 ├── library.js                 # 插件入口文件
@@ -940,7 +938,7 @@ small-bb/
 | `controllers/cryptoUtils.js` | 服务端加密工具（AES-256-GCM、PBKDF2、Base-N） |
 | `controllers/cryptoController.js` | 处理加密/解密 API 请求 |
 | `controllers/renderController.js` | 渲染主页面模板 |
-| `templates/small-bb.tpl` | 前端 UI 模板，包含客户端加密逻辑 |
+| `templates/small_bb.tpl` | 前端 UI 模板，包含客户端加密逻辑 |
 | `public/assets/style.css` | 像素风格 CSS 样式 |
 | `plugin.json` | NodeBB 插件元数据和钩子注册 |
 
@@ -1111,7 +1109,7 @@ docker start mongodb
 
 **错误信息**：
 ```
-Cannot GET /small-bb
+Cannot GET /small_bb
 ```
 
 **原因分析**：插件未正确安装或未在管理后台激活。
@@ -1120,8 +1118,8 @@ Cannot GET /small-bb
 
 ```bash
 # 1. 确认插件文件存在
-ls ./node_modules/small-bb/plugin.json
-ls ./node_modules/small-bb/library.js
+ls ./node_modules/small_bb/plugin.json
+ls ./node_modules/small_bb/library.js
 
 # 2. 重新构建 NodeBB
 ./nodebb build
@@ -1132,10 +1130,10 @@ ls ./node_modules/small-bb/library.js
 # 4. 通过管理后台激活插件:
 #    访问 http://localhost:4567/admin
 #    进入 Plugins → Installed
-#    找到 "小声BB加密通讯终端" → Activate
+#    找到 "Small_BB加密通讯终端" → Activate
 
 # 5. 检查 NodeBB 日志
-./nodebb log | grep "small-bb"
+./nodebb log | grep "small_bb"
 ```
 
 ---
@@ -1300,10 +1298,10 @@ node --version
 
 ```bash
 # 1. 检查模板文件是否存在
-ls ./node_modules/small-bb/templates/small-bb.tpl
+ls ./node_modules/small_bb/templates/small_bb.tpl
 
 # 2. 检查静态资源配置
-cat ./node_modules/small-bb/plugin.json
+cat ./node_modules/small_bb/plugin.json
 # 确认 "staticDirs" 配置正确
 
 # 3. 清除浏览器缓存
@@ -1321,8 +1319,8 @@ cat ./node_modules/small-bb/plugin.json
 
 ```bash
 # 1. 克隆项目
-git clone https://github.com/your-org/small-bb.git
-cd small-bb
+git clone https://github.com/your-org/small_bb.git
+cd small_bb
 
 # 2. 安装开发依赖
 npm install

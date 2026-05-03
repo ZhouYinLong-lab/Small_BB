@@ -1,11 +1,11 @@
 {
-    "name": "small-bb",
+    "name": "small_bb",
     "version": "2.0.0",
-    "description": "小声BB - 基于私钥的加密即时通讯系统",
+    "description": "Small_BB - 基于私钥的加密即时通讯系统",
     "main": "library.js",
     "repository": {
         "type": "git",
-        "url": "https://github.com/your-org/small-bb.git"
+        "url": "https://github.com/your-org/small_bb.git"
     },
     "keywords": [
         "nodebb",
@@ -18,9 +18,9 @@
     "author": "Small_BB Team",
     "license": "MIT",
     "bugs": {
-        "url": "https://github.com/your-org/small-bb/issues"
+        "url": "https://github.com/your-org/small_bb/issues"
     },
-    "homepage": "https://github.com/your-org/small-bb#readme",
+    "homepage": "https://github.com/your-org/small_bb#readme",
     "nbbpm": {
         "compatibility": "^2.0.0 || ^3.0.0"
     },
